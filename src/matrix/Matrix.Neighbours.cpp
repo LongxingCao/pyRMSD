@@ -34,12 +34,12 @@ static PyObject* condensedMatrix_get_neighbors_for_node(CondensedMatrix* self, P
 	}
 
 	// Convert to C types
-	int node = (int) PyInt_AsLong((PyObject *)node_obj);
+	int node = (int) PyLong_AsLong((PyObject *)node_obj);
 	double cutoff = PyFloat_AsDouble((PyObject *)cutoff_obj);
 	int len_nodes_left = PyList_Size((PyObject *)nodes_left_list);
 	int* nodes_left = new int[len_nodes_left];
 	for(int i = 0; i < len_nodes_left; ++i){
-		nodes_left[i] = PyInt_AS_LONG(PyList_GET_ITEM((PyObject*) nodes_left_list,i));
+		nodes_left[i] = PyLong_AS_LONG(PyList_GET_ITEM((PyObject*) nodes_left_list,i));
 	}
 
 	// Do the job
@@ -104,7 +104,7 @@ static PyObject*  condensedMatrix_choose_node_with_higher_cardinality(CondensedM
 	int len_nodes = PyList_Size((PyObject *)nodes_list);
 	int* nodes = new int[len_nodes];
 	for(int i = 0; i < len_nodes; ++i){
-		nodes[i] = PyInt_AS_LONG(PyList_GET_ITEM((PyObject*) nodes_list,i));
+		nodes[i] = PyLong_AS_LONG(PyList_GET_ITEM((PyObject*) nodes_list,i));
 	}
 	
 	//Do the job

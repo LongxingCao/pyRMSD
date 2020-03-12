@@ -223,7 +223,7 @@ def availableCalculators():
             produced_file = open(".products","r")
             for produced_file_line in produced_file:
                 os.system("rm "+produced_file_line)
-                print "rm "+produced_file_line[:-1]
+                print("rm "+produced_file_line[:-1])
             produced_file.close()
             # Clear the products file itself
             os.system("rm .products")

@@ -46,7 +46,7 @@ static void condensedMatrix_dealloc(CondensedMatrix* self){
 	if(self->numpy_array != NULL){
 		Py_DECREF(self->numpy_array);
 	}
-    self->ob_type->tp_free((PyObject*)self);
+    Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
 /*
@@ -201,8 +201,8 @@ static PyMethodDef condensedMatrix_methods[] = {
 
 PyObject* condensedMatrix_subscript(CondensedMatrix *self, PyObject *key){
 	int pos, i,j;
-	i = PyInt_AS_LONG(PyTuple_GET_ITEM(key,0));
-	j = PyInt_AS_LONG(PyTuple_GET_ITEM(key,1));
+	i = PyLong_AS_LONG(PyTuple_GET_ITEM(key,0));
+	j = PyLong_AS_LONG(PyTuple_GET_ITEM(key,1));
 
 	if (i < j){
 		pos = calc_vector_pos(i,j,self);
@@ -222,8 +222,8 @@ PyObject* condensedMatrix_subscript(CondensedMatrix *self, PyObject *key){
 
 int condensedMatrix_ass_subscript(CondensedMatrix *self, PyObject *key, PyObject *v){
 	int pos, i,j;
-	i = PyInt_AS_LONG(PyTuple_GET_ITEM(key,0));
-	j = PyInt_AS_LONG(PyTuple_GET_ITEM(key,1));
+	i = PyLong_AS_LONG(PyTuple_GET_ITEM(key,0));
+	j = PyLong_AS_LONG(PyTuple_GET_ITEM(key,1));
 
 	if (i < j){
 		pos = calc_vector_pos(i,j,self);
@@ -267,64 +267,86 @@ static PyMappingMethods pdb_as_mapping = {
 };
 
 static PyTypeObject CondensedMatrixType = {
-    PyObject_HEAD_INIT(NULL)
-    0,                         						/*ob_size*/
+    PyVarObject_HEAD_INIT(NULL, 0)
     "condensedMatrix.CondensedMatrixType",      	/*tp_name*/
-    sizeof(CondensedMatrix), 	/*tp_basicsize*/
-    0,                         /*tp_itemsize*/
-    (destructor)condensedMatrix_dealloc, /*tp_dealloc*/
-    0,                         /*tp_print*/
-    0,                         /*tp_getattr*/
-    0,                         /*tp_setattr*/
-    0,                         /*tp_compare*/
-    0,                         /*tp_repr*/
-    0,                         /*tp_as_number*/
-    0,                         /*tp_as_sequence*/
-    &pdb_as_mapping,           /*tp_as_mapping*/
-    0,                         /*tp_hash */
-    0,                         /*tp_call*/
-    0,                         /*tp_str*/
-    0,                         /*tp_getattro*/
-    0,                         /*tp_setattro*/
-    0,                         /*tp_as_buffer*/
-    Py_TPFLAGS_DEFAULT| Py_TPFLAGS_BASETYPE , /*tp_flags*/
-    "Condensed matrix as in pdist",           /* tp_doc */
-	0,		               					  /* tp_traverse */
-	0,		               					  /* tp_clear */
-	0,		               					  /* tp_richcompare */
-	0,		              					  /* tp_weaklistoffset */
-	0,		               	   /* tp_iter */
-	0,		               	   /* tp_iternext */
-	condensedMatrix_methods,   /* tp_methods */
-	condensedMatrix_members,   /* tp_members */
-	0,                         /* tp_getset */
-	0,                         /* tp_base */
-	0,                         /* tp_dict */
-	0,                         /* tp_descr_get */
-	0,                         /* tp_descr_set */
-	0,                         /* tp_dictoffset */
-	(initproc)condensedMatrix_init, /* tp_init */
-	0,                         		/* tp_alloc */
-	condensedMatrix_new,        		/* tp_new */
+    sizeof(CondensedMatrix), 	                    /*tp_basicsize*/
+    0,                                              /*tp_itemsize*/
+    (destructor)condensedMatrix_dealloc,            /*tp_dealloc*/
+    0,                                              
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    &pdb_as_mapping,                                /*tp_as_mapping*/
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    tp_flags : Py_TPFLAGS_DEFAULT| Py_TPFLAGS_BASETYPE , /*tp_flags*/
+    tp_doc : "Condensed matrix as in pdist",           /* tp_doc */
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+	tp_methods : condensedMatrix_methods,   /* tp_methods */
+	tp_members : condensedMatrix_members,   /* tp_members */
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+	tp_init : (initproc)condensedMatrix_init, /* tp_init */
+    0,
+	tp_new : condensedMatrix_new,        		/* tp_new */
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
 };
 
 #ifndef PyMODINIT_FUNC	/* declarations for DLL import/export */
 #define PyMODINIT_FUNC void
 #endif
 
+static struct PyModuleDef moduledef = {
+    PyModuleDef_HEAD_INIT,
+    "condensedMatrix",
+    "Fast Acess Condensed Matrix",
+    -1,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+};
 
-PyMODINIT_FUNC initcondensedMatrix(void){
+PyMODINIT_FUNC PyInit_condensedMatrix(void){
     PyObject* module;
 
     if (PyType_Ready(&CondensedMatrixType) < 0)
-        return;
+        return NULL;
 
-    module = Py_InitModule3("condensedMatrix", NULL,"Fast Access Condensed Matrix");
+    module = PyModule_Create(&moduledef);
     if (module == NULL)
-          return;
+          return NULL;
 
     Py_INCREF(&CondensedMatrixType);
     PyModule_AddObject(module, "CondensedMatrix", (PyObject*) &CondensedMatrixType);
 
     import_array();
+
+    return module;
 }

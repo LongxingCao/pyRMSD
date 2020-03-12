@@ -100,8 +100,7 @@ static PyMethodDef pdbreader_methods[] = {
 };
 
 static PyTypeObject pdbreaderType = {
-    PyObject_HEAD_INIT(NULL)
-    0,                         						/*ob_size*/
+    PyVarObject_HEAD_INIT(NULL, 0)
     "PDBReader.Reader",      	/*tp_name*/
     sizeof(pdbreader), 	/*tp_basicsize*/
     0,                         /*tp_itemsize*/
@@ -139,25 +138,48 @@ static PyTypeObject pdbreaderType = {
 	(initproc)pdbreader_init, /* tp_init */
 	0,                         		/* tp_alloc */
 	pdbreader_new,        		/* tp_new */
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
 };
 
 #ifndef PyMODINIT_FUNC
 #define PyMODINIT_FUNC void
 #endif
 
+static struct PyModuleDef moduledef = {
+    PyModuleDef_HEAD_INIT,
+    "pdbReader",
+    "Simple pdb reading",
+    -1,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+};
 
-PyMODINIT_FUNC initpdbReader(void){
+PyMODINIT_FUNC PyInit_pdbReader(void){
     PyObject* module;
 
     if (PyType_Ready(&pdbreaderType) < 0)
-        return;
+        return NULL;
 
-    module = Py_InitModule3("pdbReader", NULL,"Simple pdb reading");
+    module = PyModule_Create(&moduledef);
     if (module == NULL)
-          return;
+          return NULL;
 
     Py_INCREF(&pdbreaderType);
     PyModule_AddObject(module, "PDBReader", (PyObject*) &pdbreaderType);
 
     import_array();
+
+    return module;
 }

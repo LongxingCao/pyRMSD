@@ -7,3 +7,4 @@
 .cproject
 *.so
 *~
+src/calculators/test/test_rmsdtools_main

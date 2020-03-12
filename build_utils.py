@@ -105,7 +105,7 @@ def compile_a_file_collection(base_dir, file_collection, compiler, options, incl
             else:
                 last_modif_data = -1 # If it does not exist, compile
             # Finally, do last = current for the next step
-            pickle.dump(modif_data, open(modif_file,"w"))
+            pickle.dump(modif_data, open(modif_file,"wb"))
             
             filewoext,extension = file_name.split(".") #@UnusedVariable
             product = os.path.join(folder,filewoext)+product_extension

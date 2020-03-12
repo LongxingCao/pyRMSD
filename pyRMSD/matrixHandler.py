@@ -38,11 +38,11 @@ class MatrixHandler(object):
 
         @return: A condensed matrix with the pairwise RMSD matrix.
         """
-        print "Calculating matrix ..."
+        print( "Calculating matrix ..." )
         rmsd = pyRMSD.RMSDCalculator.RMSDCalculator(calculator, pdb_coordsets).pairwiseRMSDMatrix()
         self.distance_matrix = CondensedMatrix(rmsd)
         MatrixHandler.save_statistics(self.statistics_folder,self.distance_matrix)
-        print " Done"
+        print( " Done" )
         return self.distance_matrix
 
     def saveMatrix(self, matrix_file_without_extension):
@@ -52,9 +52,9 @@ class MatrixHandler(object):
         @param matrix_file_without_extension: Is the matrix file name without any
         extension ('.bin' will be added).
         """
-        print "Writing matrix data (in "+matrix_file_without_extension+".bin) ...",
+        print( "Writing matrix data (in "+matrix_file_without_extension+".bin) ..." )
         MatrixHandler.save_matrix(matrix_file_without_extension, self.distance_matrix)
-        print " Done"
+        print( " Done" )
 
     def loadMatrix(self, matrix_file_without_extension):
         """
@@ -63,9 +63,9 @@ class MatrixHandler(object):
         @param matrix_file_without_extension: Is the matrix file name without any
         extension ('.bin' will be added).
         """
-        print "Loading matrix data from "+matrix_file_without_extension+".bin ...",
+        print( "Loading matrix data from "+matrix_file_without_extension+".bin ..." )
         self.distance_matrix = MatrixHandler.load_matrix(matrix_file_without_extension)
-        print " Done"
+        print( " Done" )
 
     @classmethod
     def save_matrix(cls, matrix_file_without_extension, distance_matrix):
@@ -101,7 +101,7 @@ class MatrixHandler(object):
         @param distance_matrix: The distance matrix from which the statistics are calculated.
         """
         if statistics_folder is not None:
-            print "Calculating statistics ..."
+            print( "Calculating statistics ...")
             stats_dic = {}
             stats_dic["Minimum"] =  distance_matrix.calculateMin()
             stats_dic["Maximum"] =  distance_matrix.calculateMax()

@@ -54,8 +54,8 @@ void parse_symmetry_groups(PyListObject* list_obj, symmGroups& symmetry_groups){
 		for (int j=0; j < symmetry_elements; ++j){
 			PyObject* symm_pair = get_item(symm_group, j);
 			symm_group_vector.push_back(pair<int, int> (
-														(int) PyInt_AsLong(get_item(symm_pair, 0)),
-														(int) PyInt_AsLong(get_item(symm_pair, 1))
+														(int) PyLong_AsLong(get_item(symm_pair, 0)),
+														(int) PyLong_AsLong(get_item(symm_pair, 1))
 														)
 														);
 		}
@@ -279,8 +279,22 @@ static PyMethodDef pyRMSDMethods[] = {
     {NULL, NULL, 0, NULL}
 };
 
-PyMODINIT_FUNC initcalculators(void){
-    (void) Py_InitModule("calculators", pyRMSDMethods);
+static struct PyModuleDef moduledef = {
+    PyModuleDef_HEAD_INIT,
+    "calculators",
+    "",
+    -1,
+    pyRMSDMethods,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+};
+
+PyMODINIT_FUNC PyInit_calculators(void){
+    PyObject* module = PyModule_Create(&moduledef);
 
     import_array();
+
+    return module;
 }
